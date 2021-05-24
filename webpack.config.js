@@ -1,3 +1,4 @@
+const { WebpackManifestPlugin } = require('webpack-manifest-plugin');
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const { ModuleFederationPlugin } = require("webpack").container;
 const path = require("path");
@@ -11,7 +12,10 @@ module.exports = {
     port: 3002,
   },
   output: {
-    publicPath: "auto",
+    filename: '[contenthash].bundle.js',
+    chunkFilename: '[id].[chunkhash].js',
+    path: path.resolve('dist'),
+    publicPath: ''
   },
   module: {
     rules: [
@@ -26,9 +30,11 @@ module.exports = {
     ],
   },
   plugins: [
+    new WebpackManifestPlugin({
+    }),
     new ModuleFederationPlugin({
       name: "app2",
-      filename: "remoteEntry.js",
+      filename: "remoteEntry.[chunkhash].js",
       exposes: {
         "./Widget": "./src/Widget",
       },

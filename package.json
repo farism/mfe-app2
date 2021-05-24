@@ -10,7 +10,8 @@
     "serve": "11.3.2",
     "webpack": "5.36.2",
     "webpack-cli": "4.7.0",
-    "webpack-dev-server": "3.11.2"
+    "webpack-dev-server": "3.11.2",
+    "webpack-manifest-plugin": "^3.1.1"
   },
   "scripts": {
     "start": "webpack-cli serve",
@@ -19,8 +20,8 @@
     "clean": "rm -rf dist"
   },
   "dependencies": {
+    "moment": "^2.24.0",
     "react": "^16.13.0",
-    "react-dom": "^16.13.0",
-    "moment": "^2.24.0"
+    "react-dom": "^16.13.0"
   }
 }
