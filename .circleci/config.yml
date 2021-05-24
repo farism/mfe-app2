@@ -15,7 +15,6 @@ jobs:
       - run: yarn
       - run: yarn build
       - aws-s3/copy:
-            aws-region: us-east-1
             from: dist/
             to: s3://mfestorage
             arguments: --recursive
