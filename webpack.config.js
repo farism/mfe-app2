@@ -2,7 +2,17 @@ const { WebpackManifestPlugin } = require("webpack-manifest-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const { ModuleFederationPlugin } = require("webpack").container;
 const path = require("path");
-const deps = require("./package.json").dependencies;
+const pkg = require("./package.json");
+const name = pkg.name
+const deps = pkg.dependencies
+
+const mfe = {
+  name,
+  paths: [
+    'webclient/app2'
+  ],
+}
+
 module.exports = {
   entry: "./src/index",
   mode: "development",
@@ -33,7 +43,7 @@ module.exports = {
     new WebpackManifestPlugin({
       generate: (seed, files, entries) => {
         return {
-          name: 'app2',
+          ...mfe,
           files: files.reduce(
             (acc, cur) => ({ ...acc, [cur.name]: cur.path }),
             {}
@@ -42,7 +52,7 @@ module.exports = {
       },
     }),
     new ModuleFederationPlugin({
-      name: "app2",
+      name: mfe.name,
       filename: "remoteEntry.[chunkhash].js",
       exposes: {
         "./Widget": "./src/Widget",
