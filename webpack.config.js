@@ -1,4 +1,4 @@
-const { WebpackManifestPlugin } = require('webpack-manifest-plugin');
+const { WebpackManifestPlugin } = require("webpack-manifest-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const { ModuleFederationPlugin } = require("webpack").container;
 const path = require("path");
@@ -12,10 +12,10 @@ module.exports = {
     port: 3002,
   },
   output: {
-    filename: '[contenthash].bundle.js',
-    chunkFilename: '[id].[chunkhash].js',
-    path: path.resolve('dist'),
-    publicPath: ''
+    filename: "[contenthash].bundle.js",
+    chunkFilename: "[id].[chunkhash].js",
+    path: path.resolve("dist"),
+    publicPath: "",
   },
   module: {
     rules: [
@@ -31,6 +31,15 @@ module.exports = {
   },
   plugins: [
     new WebpackManifestPlugin({
+      generate: (seed, files, entries) => {
+        return {
+          name: 'app2',
+          files: files.reduce(
+            (acc, cur) => ({ ...acc, [cur.name]: cur.path }),
+            {}
+          ),
+        };
+      },
     }),
     new ModuleFederationPlugin({
       name: "app2",
