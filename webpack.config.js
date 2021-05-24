@@ -3,15 +3,15 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 const { ModuleFederationPlugin } = require("webpack").container;
 const path = require("path");
 const pkg = require("./package.json");
-const name = pkg.name
-const deps = pkg.dependencies
+const name = pkg.name;
+const deps = pkg.dependencies;
+const isProd = process.env.NODE_ENV === "production";
 
 const mfe = {
   name,
-  paths: [
-    'webclient/app2'
-  ],
-}
+  paths: ["webclient/app2"],
+  module: "./Widget",
+};
 
 module.exports = {
   entry: "./src/index",
@@ -19,13 +19,13 @@ module.exports = {
   target: "web",
   devServer: {
     contentBase: path.join(__dirname, "dist"),
-    port: 3002,
+    port: 3001,
   },
   output: {
     filename: "bundle.[contenthash].js",
     chunkFilename: "[id].[chunkhash].js",
     path: path.resolve("dist"),
-    publicPath: "",
+    publicPath: "auto",
   },
   module: {
     rules: [
@@ -41,6 +41,7 @@ module.exports = {
   },
   plugins: [
     new WebpackManifestPlugin({
+      publicPath: "",
       generate: (seed, files, entries) => {
         return {
           ...mfe,
@@ -53,7 +54,7 @@ module.exports = {
     }),
     new ModuleFederationPlugin({
       name: mfe.name,
-      filename: "remoteEntry.[chunkhash].js",
+      filename: isProd ? "remoteEntry.[chunkhash].js" : "remoteEntry.js",
       exposes: {
         "./Widget": "./src/Widget",
       },
